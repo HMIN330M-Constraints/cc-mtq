@@ -11,7 +11,7 @@ import org.apache.commons.cli.ParseException;
 public class App 
 {
 	
-	private static Instance inst = Instance.inst1;
+	private static Instance inst = Instance.inst0;
 	private static long timeout = 300000; // five minutes
 	private static boolean allSolutions;
 
@@ -26,7 +26,7 @@ public class App
 		if (helpMode) {
 			final HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("cocoAirlines", options, true);
-			System.exit(0);
+			
 		}
 		// Check arguments and options
 		for (Option opt : line.getOptions()) {
@@ -66,21 +66,15 @@ public class App
 	// Check all parameters values
 	public static void checkOption(CommandLine line, String option) {
 
-		switch (option) {
-		case "instance":
+		if (option.equals("instance"))
 			inst = Instance.valueOf(line.getOptionValue(option));
-			break;
-		case "timeout":
+		else if (option.equals("timeout"))
 			timeout = Long.parseLong(line.getOptionValue(option));
-			break;
-		case "all":
-			allSolutions = true;
-			break;
-		default: {
+		else if (option.equals("allSolutions"))
+			allSolutions = true; 
+		else {
 			System.err.println("Bad parameter: " + option);
 			System.exit(2);
-		}
-
 		}
 
 	}

@@ -1,6 +1,8 @@
 
 
 	enum Instance {
+		inst0(5, 11, new int[] {3}),
+
 		inst1(6, 18, new int[] { 4, 11 }),
 
 		inst2(7, 25, new int[] { 7 }),
@@ -32,5 +34,8 @@
 
 		int exit(int at) {
 			return exits[at];
+		}
+		int[] getExits(){
+			return exits;
 		}
 	}
