@@ -38,4 +38,8 @@
 		int[] getExits(){
 			return exits;
 		}
+
+		public String toString() {
+			return "(" + this.nb_dividers + ", "+ this.capacity + ", " + this.exits.length + ")" ;
+		}
 	}

@@ -1,3 +1,5 @@
+import javax.swing.text.AbstractDocument.Content;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -6,13 +8,13 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-
-
 public class App 
 {
 	
+	private static Instance[] instances = new Instance[] { Instance.inst0, Instance.inst1, Instance.inst2, 
+		Instance.inst3, Instance.inst4, Instance.inst5, Instance.inst6, Instance.inst7, Instance.inst8};
 	private static Instance inst = Instance.inst0;
-	private static long timeout = 300000; // five minutes
+	private static long timeout = 300000000; // five minutes
 	private static boolean allSolutions;
 
 	
@@ -22,18 +24,14 @@ public class App
 		final CommandLineParser parser = new DefaultParser();
 		final CommandLine line = parser.parse(options, args);
 
-		boolean helpMode = line.hasOption("help") || args.length == 0;
-		if (helpMode) {
-			final HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("cocoAirlines", options, true);
-			
-		}
 		// Check arguments and options
 		for (Option opt : line.getOptions()) {
-			checkOption(line, opt.getLongOpt());
+			checkOption(line, opt.getLongOpt(), options);
 		}
 
+		//System.out.println("Cheking instance " + inst.toString());
 		new CocoAirlines().solve(inst, timeout, allSolutions);
+		//System.out.println("");
 	}
 	
 	
@@ -64,15 +62,18 @@ public class App
 	
 
 	// Check all parameters values
-	public static void checkOption(CommandLine line, String option) {
+	public static void checkOption(CommandLine line, String option, Options options) {
 
 		if (option.equals("instance"))
 			inst = Instance.valueOf(line.getOptionValue(option));
 		else if (option.equals("timeout"))
 			timeout = Long.parseLong(line.getOptionValue(option));
-		else if (option.equals("allSolutions"))
-			allSolutions = true; 
-		else {
+		else if (option.equals("all"))
+			allSolutions = true;
+		else if (option.equals("help")) {
+			final HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("cocoAirlines", options, true);
+		} else {
 			System.err.println("Bad parameter: " + option);
 			System.exit(2);
 		}
