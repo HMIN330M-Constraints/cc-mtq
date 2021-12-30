@@ -36,12 +36,12 @@ public class CocoAirlines {
 		//System.out.println(st);
 		//int i = 0;
 		while (model.getSolver().solve()) {	
-			//System.out.println("Solution " + ++i);
-			/* for(IntVar divider : dividers){
-				//System.out.print(divider.getName()+"->"+divider.getValue()+"; ");
-			} */
+			/* System.out.println("Solution " + ++i);
+			for(IntVar divider : dividers){
+				System.out.print(divider.getName()+"->"+divider.getValue()+"; ");
+			}
 
-			//System.out.println("");
+			System.out.println(""); */
 			if (!allSolutions) break;
 		}
 		model.getSolver().printStatistics();
@@ -53,15 +53,20 @@ public class CocoAirlines {
 		model = new Model("Aircraft Class Divider ");
 
 		// VARIABLES
-		int n = inst.nb_dividers-2;
+		// n est le nombre  de diviseur mobile
+		int n = inst.nb_dividers-2; 
 		dividers = new IntVar[n+2];
-		dividers[0] = model.intVar("d_"+0, 0, 0, false);
-		dividers[n+1] = model.intVar("d_"+(n+1), inst.capacity+1, inst.capacity+1, false);
 
+		// les diviseurs fixes
+		dividers[0] = model.intVar("d_"+0, 0, 0, false);
+		dividers[n+1] = model.intVar("d_"+(n+1), inst.capacity, inst.capacity, false);
+
+		// les diviseurs mobiles
 		for(int i = 1; i < n+1; i++){
-			dividers[i] = model.intVar("d_"+i, 3, inst.capacity, false);
+			dividers[i] = model.intVar("d_"+i, 2, inst.capacity-1, false);
 		}
 
+		// les differences entre chaque diviseurs (mobiles et fixes)
 		List<IntVar> different = new ArrayList<IntVar>();
 		for (int i = 0; i < n + 2; i++) {
 			for (int j = i + 1; j < n + 2; j++) {
@@ -70,17 +75,20 @@ public class CocoAirlines {
 		}
 
 		// CONSTRAINTS
-		// here!
-		model.allDifferent(dividers, "AC").post();
+		// exits
+		for(int i = 0; i < n+2; i++){
+			model.notMember(dividers[i], inst.getExits()).post();
+		}
+
+		// pour éviter les doublons dans les résultats
+		for(int i=0; i < n+1; i++) {
+			model.arithm(dividers[i], "<", dividers[i+1]).post();
+		}
+		//model.allDifferent(dividers, "AC").post();
 		
 		IntVar[] different_var = new IntVar[different.size()];
 		different_var = different.toArray(different_var);
 		model.allDifferent(different_var, "AC").post();
-		
-		for(int i = 0; i < n+2; i++){
-			model.notMember(dividers[i], inst.getExits()).post();
-		}
-		
 	}
 
 	public void configureSearch() {
