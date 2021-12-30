@@ -14,7 +14,7 @@ public class App
 	private static Instance[] instances = new Instance[] { Instance.inst0, Instance.inst1, Instance.inst2, 
 		Instance.inst3, Instance.inst4, Instance.inst5, Instance.inst6, Instance.inst7, Instance.inst8};
 	private static Instance inst = Instance.inst0;
-	private static long timeout = 300000000; // five minutes
+	private static long timeout = 60000;
 	private static boolean allSolutions;
 
 	
