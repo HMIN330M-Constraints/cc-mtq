@@ -16,12 +16,17 @@ https://classroom.github.com/a/98qIJfET
 - [Documentation Choco](https://choco-solver.org/docs/)
 - [Documentation Git](docs/git-documentation.pdf)
 
+## idée d'implémentattions 
+
+chaque bloc est une variable booléene qui peut contenir un diviseur ou non !! mais ça complique la contrainte pour que toutes les classes soit de taille différente.
 
 -------------
 Partie étudiants :
 
-Nom de l'équipe :
+Nom de l'équipe : MTQ
 membres de équipe :
-- étudiant1
-- étudiant2
-- ...
+- Aissani Camille
+- EL HOUITI Chakib
+- Kezzoul Massili
+- ŞENDOĞAN Ege
+
