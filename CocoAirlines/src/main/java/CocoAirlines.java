@@ -1,4 +1,4 @@
-import static org.chocosolver.solver.search.strategy.Search.minDomLBSearch;
+import static org.chocosolver.solver.search.strategy.Search.*;
 import static org.chocosolver.util.tools.ArrayUtils.append;
 
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ public class CocoAirlines {
 
 	
 	IntVar[] dividers;
+	IntVar[] different_var;
 
 	Model model;
 
@@ -29,19 +30,20 @@ public class CocoAirlines {
 	public void solve(Instance inst, long timeout, boolean allSolutions) {
 
 		buildModel(inst);
+		this.configureSearch();
 		model.getSolver().limitTime(timeout);
 		StringBuilder st = new StringBuilder(
 				String.format(model.getName() + "-- %s x %s", inst.nb_dividers, inst.capacity));
 
-		//System.out.println(st);
-		//int i = 0;
+		// System.out.println(st);
+		int i = 0;
 		while (model.getSolver().solve()) {	
-			/* System.out.println("Solution " + ++i);
-			for(IntVar divider : dividers){
-				System.out.print(divider.getName()+"->"+divider.getValue()+"; ");
-			}
+			// System.out.println("Solution " + ++i);
+			/* for(IntVar divider : dividers){
+				// System.out.print(divider.getName()+"->"+divider.getValue()+"; ");
+			} */
 
-			System.out.println(""); */
+			// System.out.println("");
 			if (!allSolutions) break;
 		}
 		model.getSolver().printStatistics();
@@ -84,16 +86,15 @@ public class CocoAirlines {
 		for(int i=0; i < n+1; i++) {
 			model.arithm(dividers[i], "<", dividers[i+1]).post();
 		}
-		//model.allDifferent(dividers, "AC").post();
-		
-		IntVar[] different_var = new IntVar[different.size()];
+
+		different_var = new IntVar[different.size()];
 		different_var = different.toArray(different_var);
 		model.allDifferent(different_var, "AC").post();
 	}
 
 	public void configureSearch() {
 		model.getSolver().setSearch(minDomLBSearch(append(dividers)));
-
+		//model.getSolver().setSearch(domOverWDegSearch(append(dividers)));
 	}
 
 }
